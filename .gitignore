@@ -1,0 +1,4 @@
+node_modules
+data-node
+.nyc_output
+dist/
