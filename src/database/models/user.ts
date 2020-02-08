@@ -15,10 +15,14 @@ const userSchema: Schema = new Schema({
         type: String,
         select: false
     },
-    githubToken: {
-        type: String,
-        select: false
-    }
+    roles: [{
+        role: {
+            type: String,
+            enum: ["user", "admin"],
+            default: "user"
+        }
+    }]
+
 });
 
 const User: Model<IUserModel> = model<IUserModel>("User", userSchema);
