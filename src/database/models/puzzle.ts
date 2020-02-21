@@ -15,8 +15,9 @@ const puzzleSchema: Schema = new Schema({
         type: String,
     },
     next: [{
-        type: Schema.Types.ObjectId,
-        ref: "Puzzle"
+        type: String,
+        // type: Schema.Types.ObjectId,
+        // ref: "Puzzle"
     }]
 });
 

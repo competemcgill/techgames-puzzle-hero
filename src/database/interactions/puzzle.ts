@@ -11,6 +11,9 @@ export const puzzleDBInteractions = {
     find: (puzzleId: string): Promise<IPuzzleModel> => {
         return Puzzle.findOne({ _id: puzzleId }).exec();
     },
+    findByTitle: (title: string, ): Promise<IPuzzleModel> => {
+        return Puzzle.findOne({ title: title }).exec();
+    },
     update: (puzzleId: string, newPuzzle: IPuzzle): Promise<IPuzzleModel> => {
         return Puzzle.findByIdAndUpdate(puzzleId, newPuzzle, { new: true }).exec();
     },
