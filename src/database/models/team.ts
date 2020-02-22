@@ -1,7 +1,7 @@
 import { ITeam } from "../../interfaces/team";
 import { Schema, Document, Model, model } from "mongoose";
 
-export interface ITeamModel extends ITeam, Document {}
+export interface ITeamModel extends ITeam, Document { }
 
 const teamSchema: Schema = new Schema({
     name: {
@@ -11,6 +11,10 @@ const teamSchema: Schema = new Schema({
     users: [{
         type: Schema.Types.ObjectId,
         ref: "User"
+    }],
+    puzzles: [{
+        puzzleId: Schema.Types.ObjectId,
+        completed: Boolean
     }]
 });
 
