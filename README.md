@@ -7,6 +7,12 @@
 * [NVM (optional but highly recommended)](https://github.com/nvm-sh/nvm)
 * [Node (preferably v11.13.0)](https://nodejs.org/en/download)
 
+## Env variables:
+* `SECRET` for the Auth secret passed from frontend to backend
+* `SERVER_PORT` for the port on which the server listens
+* `NODE_ENV` should be `dev` or `production`
+* `DB_URL` is the URL to the mongo DB 
+
 ## Instructions
 
 * To install dependencies (not needed for running server but helps with development)

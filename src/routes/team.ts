@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { teamController } from "../controllers/team";
 import { teamValidator } from "../util/validators/teamValidator";
-
+import { middleware } from "../util/middleware";
 const teamRouter: Router = Router();
 
 /**
@@ -81,10 +81,10 @@ teamRouter.get("/:teamId", teamValidator("GET /teams/:teamId"), teamController.s
  *          500:
  *              description: Internal server error
  */
-teamRouter.post("/", teamValidator("POST /teams"), teamController.create);
+teamRouter.post("/", middleware.auth, teamValidator("POST /teams"), teamController.create);
 
 
-teamRouter.post("/:teamId/addUser", teamValidator("POST /teams/:teamId/addUser"), teamController.addUser);
+teamRouter.post("/:teamId/addUser", middleware.auth, teamValidator("POST /teams/:teamId/addUser"), teamController.addUser);
 
 
 
@@ -129,7 +129,7 @@ teamRouter.post("/:teamId/addUser", teamValidator("POST /teams/:teamId/addUser")
  *          500:
  *              description: Internal server error
  */
-teamRouter.put("/:teamId", teamValidator("PUT /teams/:teamId"), teamController.update);
+teamRouter.put("/:teamId", middleware.auth, teamValidator("PUT /teams/:teamId"), teamController.update);
 
 /**
  * @swagger
@@ -155,6 +155,6 @@ teamRouter.put("/:teamId", teamValidator("PUT /teams/:teamId"), teamController.u
  *          500:
  *              description: Internal server error
  */
-teamRouter.delete("/:teamId", teamValidator("DELETE /teams/:teamId"), teamController.delete);
+teamRouter.delete("/:teamId", middleware.auth, teamValidator("DELETE /teams/:teamId"), teamController.delete);
 
 export { teamRouter };

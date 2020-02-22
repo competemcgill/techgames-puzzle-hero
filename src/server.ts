@@ -2,7 +2,12 @@ import { app, port } from "./app";
 import mongoose from "mongoose";
 import { seed } from "./database/seed/seedSetup";
 
-const dbUrl = "mongodb://mongo:27017/techgames";
+let dbUrl = "";
+
+
+(process.env.DB_URL)
+    ? dbUrl = process.env.DB_URL
+    : dbUrl = "mongodb://mongo:27017/techgames";
 
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,

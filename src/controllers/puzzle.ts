@@ -76,7 +76,7 @@ const puzzleController = {
                     return
                 }
                 let index = await team.puzzles.findIndex(obj => obj.puzzleId == req.params.puzzleId)
-                if (foundPuzzle.answer == req.body.answer) {
+                if (foundPuzzle.answer.toLowerCase() == req.body.answer.toLowerCase()) {
                     if (index != -1 && !team.puzzles[index].completed) {
                         team.puzzles[index].completed = true
                         team.score += 1
