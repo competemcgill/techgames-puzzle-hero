@@ -83,6 +83,11 @@ teamRouter.get("/:teamId", teamValidator("GET /teams/:teamId"), teamController.s
  */
 teamRouter.post("/", teamValidator("POST /teams"), teamController.create);
 
+
+teamRouter.post("/:teamId/addUser", teamValidator("POST /teams/:teamId/addUser"), teamController.addUser);
+
+
+
 /**
  * @swagger
  * /teams/{teamId}:

@@ -14,11 +14,8 @@ const userSchema: Schema = new Schema({
     password: {
         type: String,
         select: false
-    },
-    githubToken: {
-        type: String,
-        select: false
     }
+
 });
 
 const User: Model<IUserModel> = model<IUserModel>("User", userSchema);

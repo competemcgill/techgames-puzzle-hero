@@ -6,6 +6,7 @@ import swaggerDoc from "../swaggerDoc";
 import { Application, Request, Response } from "express";
 import { userRouter } from "./routes/user";
 import { teamRouter } from "./routes/team";
+import { puzzleRouter } from "./routes/puzzle";
 
 export const port: Number = parseInt(process.env.SERVER_PORT) || 3000;
 const app: Application = express();
@@ -17,6 +18,7 @@ if (process.env.NODE_ENV == "dev") app.use(bodyParser.urlencoded({ extended: tru
 if (process.env.NODE_ENV != "production") swaggerDoc(app);
 app.use("/users", userRouter);
 app.use("/teams", teamRouter);
+app.use("/puzzles", puzzleRouter);
 
 app.use((req: Request, res: Response) => {
     res.status(404).send({

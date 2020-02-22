@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { userController } from "../controllers/user";
+import { userValidator } from "../util/validators/userValidator";
 
 const userRouter: Router = Router();
 
@@ -20,7 +21,7 @@ const userRouter: Router = Router();
  *          500:
  *              description: Internal server error
  */
-userRouter.get("/", userController.index);
+userRouter.get("/", userValidator("GET /users"), userController.index);
 
 /**
  * @swagger
@@ -48,7 +49,7 @@ userRouter.get("/", userController.index);
  *          500:
  *              description: Internal server error
  */
-userRouter.get("/:userId", userController.show);
+userRouter.get("/:userId", userValidator("GET /users/:userId"), userController.show);
 
 /**
  * @swagger
@@ -83,48 +84,7 @@ userRouter.get("/:userId", userController.show);
  *          500:
  *              description: Internal server error
  */
-userRouter.post("/", userController.create);
-
-/**
- * @swagger
- * /users/{userId}:
- *  put:
- *      description: Updates a specific User
- *      tags:
- *          - Users
- *      parameters:
- *          - in: path
- *            name: userId
- *            description: ID of the User to update
- *            schema:
- *                type: string
- *                required: true
- *          - in: body
- *            name: userData
- *            description: email or password can be updated
- *            schema:
- *                type: object
- *                properties:
- *                    email:
- *                        type: string
- *                    password:
- *                        type: string
- *                example:
- *                    email: "example@gmail.com"
- *                    password: "password"
- *      produces:
- *          -application/json
- *      responses:
- *          200:
- *              description: Returns updated User
- *          404:
- *              description: User not found
- *          422:
- *              description: Validation error
- *          500:
- *              description: Internal server error
- */
-userRouter.put("/:userId", userController.update);
+userRouter.post("/", userValidator("POST /users"), userController.create);
 
 /**
  * @swagger
@@ -150,6 +110,8 @@ userRouter.put("/:userId", userController.update);
  *          500:
  *              description: Internal server error
  */
-userRouter.delete("/:userId", userController.delete);
+userRouter.delete("/:userId", userValidator("DELETE /users/:userId"), userController.delete);
+
+
 
 export { userRouter };

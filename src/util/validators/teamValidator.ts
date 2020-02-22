@@ -15,6 +15,12 @@ export function teamValidator(method: string): ValidationChain[] {
                 body("name", "Invalid or missing 'name'").exists().isString(),
             ];
         }
+        case "POST /teams/:teamId/addUser": {
+            return [
+                param("teamId", "Invalid or missing ':teamId'").exists().isMongoId(),
+                body("userId", "Invalid or missing 'userId'").exists().isMongoId(),
+            ];
+        }
         case "PUT /teams/:teamId": {
             return [
                 param("teamId", "Invalid or missing ':teamId'").exists().isMongoId(),
