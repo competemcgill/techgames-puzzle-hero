@@ -112,4 +112,6 @@ userRouter.post("/", userValidator("POST /users"), userController.create);
  */
 userRouter.delete("/:userId", userValidator("DELETE /users/:userId"), userController.delete);
 
+
+
 export { userRouter };

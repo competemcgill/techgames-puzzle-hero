@@ -58,7 +58,7 @@ const puzzleController = {
             return
         } else {
             try {
-                const foundPuzzle: IPuzzleModel = await puzzleDBInteractions.find(req.params.puzzleId);
+                const foundPuzzle: IPuzzleModel = await puzzleDBInteractions.getAnswer(req.params.puzzleId);
                 if (!foundPuzzle) {
                     res.status(statusCodes.MISSING_PARAMS).json({
                         success: false,

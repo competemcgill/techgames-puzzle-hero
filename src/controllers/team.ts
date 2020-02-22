@@ -107,6 +107,35 @@ const teamController = {
         }
     },
 
+    addUser: async (req: Request, res: Response) => {
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
+        } else {
+            try {
+                const user = await userDBInteractions.find(req.body.userId);
+                if (user) {
+                    const team = await teamDBInteractions.find(req.params.teamId);
+                    if (team) {
+                        team.users.push(user._id)
+                        await teamDBInteractions.update(req.params.teamId, team);
+                        res.status(statusCodes.SUCCESS).send(team);
+                    } else {
+                        res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Team not found" });
+                        return
+                    }
+                } else {
+                    res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "User not found" });
+                    return
+                }
+
+            } catch (error) {
+                res.status(statusCodes.SERVER_ERROR).send(error);
+            }
+        }
+    },
+
     delete: async (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -115,7 +144,7 @@ const teamController = {
             try {
                 const team = await teamDBInteractions.find(req.params.teamId);
                 if (team) {
-                    await userDBInteractions.delete(req.params.userId);
+                    await teamDBInteractions.delete(req.params.teamId);
                     res.status(statusCodes.SUCCESS).send(team);
                 } else {
                     res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Team not found" });
