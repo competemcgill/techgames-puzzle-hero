@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { userController } from "../controllers/user";
 import { userValidator } from "../util/validators/userValidator";
+import { middleware } from "../util/middleware";
 
 const userRouter: Router = Router();
 
@@ -84,7 +85,7 @@ userRouter.get("/:userId", userValidator("GET /users/:userId"), userController.s
  *          500:
  *              description: Internal server error
  */
-userRouter.post("/", userValidator("POST /users"), userController.create);
+userRouter.post("/", middleware.auth, userValidator("POST /users"), userController.create);
 
 /**
  * @swagger
@@ -110,7 +111,7 @@ userRouter.post("/", userValidator("POST /users"), userController.create);
  *          500:
  *              description: Internal server error
  */
-userRouter.delete("/:userId", userValidator("DELETE /users/:userId"), userController.delete);
+userRouter.delete("/:userId", middleware.auth, userValidator("DELETE /users/:userId"), userController.delete);
 
 
 

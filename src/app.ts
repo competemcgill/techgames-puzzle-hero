@@ -14,7 +14,8 @@ const app: Application = express();
 app.use(cors());
 app.use(expressValidator());
 app.use(bodyParser.json());
-if (process.env.NODE_ENV == "dev") app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }))
+// if (process.env.NODE_ENV == "dev") app.use(bodyParser.urlencoded({ extended: true }));
 if (process.env.NODE_ENV != "production") swaggerDoc(app);
 app.use("/users", userRouter);
 app.use("/teams", teamRouter);
