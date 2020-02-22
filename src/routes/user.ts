@@ -88,47 +88,6 @@ userRouter.post("/", userValidator("POST /users"), userController.create);
 
 /**
  * @swagger
- * /users/{userId}:
- *  put:
- *      description: Updates a specific User
- *      tags:
- *          - Users
- *      parameters:
- *          - in: path
- *            name: userId
- *            description: ID of the User to update
- *            schema:
- *                type: string
- *                required: true
- *          - in: body
- *            name: userData
- *            description: email or password can be updated
- *            schema:
- *                type: object
- *                properties:
- *                    email:
- *                        type: string
- *                    password:
- *                        type: string
- *                example:
- *                    email: "example@gmail.com"
- *                    password: "password"
- *      produces:
- *          -application/json
- *      responses:
- *          200:
- *              description: Returns updated User
- *          404:
- *              description: User not found
- *          422:
- *              description: Validation error
- *          500:
- *              description: Internal server error
- */
-userRouter.put("/:userId", userValidator("PUT /users/:userId"), userController.update);
-
-/**
- * @swagger
  * /user/{userId}:
  *  delete:
  *      description: Deletes a specific User

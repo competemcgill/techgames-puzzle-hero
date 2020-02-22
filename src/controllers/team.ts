@@ -108,7 +108,22 @@ const teamController = {
     },
 
     delete: async (req: Request, res: Response) => {
-        res.status(200).send({ msg: "Not implemented" });
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
+        } else {
+            try {
+                const team = await teamDBInteractions.find(req.params.teamId);
+                if (team) {
+                    await userDBInteractions.delete(req.params.userId);
+                    res.status(statusCodes.SUCCESS).send(team);
+                } else {
+                    res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Team not found" });
+                }
+            } catch (error) {
+                res.status(statusCodes.SERVER_ERROR).send(error);
+            }
+        }
     }
 };
 

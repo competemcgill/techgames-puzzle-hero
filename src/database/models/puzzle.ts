@@ -13,6 +13,7 @@ const puzzleSchema: Schema = new Schema({
     },
     answer: {
         type: String,
+        select: false
     },
     next: [{
         type: String,
