@@ -10,4 +10,4 @@ dploy:
         provider: script
         script: bash docker_push
         on:
-                branch: ci/travis
+                branch: master
