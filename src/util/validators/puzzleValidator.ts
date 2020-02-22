@@ -18,8 +18,8 @@ export function puzzleValidator(method: string): ValidationChain[] {
         case "POST /puzzles/:puzzleId/checkAnswer": {
             return [
                 param("puzzleId", "Invalid or missing ':puzzleId'").exists().isMongoId(),
-                body("teamId", "Invalid 'teamId'").optional().isMongoId(),
-                body("answer", "Invalid 'answer'").optional().isString(),
+                body("teamId", "Invalid 'teamId'").exists().isMongoId(),
+                body("answer", "Invalid 'answer'").exists().isString(),
             ];
         }
 

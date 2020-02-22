@@ -7,4 +7,5 @@ export interface ITeam {
         puzzleId: string;
         completed: boolean;
     }];
+    score: number;
 }

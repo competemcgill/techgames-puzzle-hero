@@ -21,7 +21,7 @@ const teamController = {
     show: async (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-           res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage));
+            res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
                 const foundTeam: ITeamModel = await teamDBInteractions.find(req.params.teamId);
@@ -35,13 +35,16 @@ const teamController = {
     create: async (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage));
+            res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
                 const foundTeam: ITeamModel = await teamDBInteractions.find(req.params.teamId);
-                if (foundTeam) res.status(statusCodes.BAD_REQUEST).send({msg: "Team already exists"});
+                if (foundTeam) res.status(statusCodes.BAD_REQUEST).send({ msg: "Team already exists" });
                 const teamData: ITeam = {
-                    ...req.body
+                    ...req.body,
+                    name: req.body.name,
+                    users: [],
+                    score: 0
                 };
                 const newTeam: ITeamModel = await teamDBInteractions.create(new Team(teamData));
                 newTeam.toJSON();
@@ -56,7 +59,7 @@ const teamController = {
     update: async (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage));
+            res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             let foundTeam: ITeamModel;
             try {
@@ -70,7 +73,7 @@ const teamController = {
                     try {
                         const foundUser = await userDBInteractions.find(u);
                         if (!foundUser) {
-                            res.status(statusCodes.NOT_FOUND).send({msg: `User with id: ${u} not found`});
+                            res.status(statusCodes.NOT_FOUND).send({ msg: `User with id: ${u} not found` });
                             return;
                         }
                     } catch (error) {
@@ -81,9 +84,9 @@ const teamController = {
             }
             if (req.body.name) {
                 try {
-                    const existingTeam =  await teamDBInteractions.findByName(req.body.name);
+                    const existingTeam = await teamDBInteractions.findByName(req.body.name);
                     if (!existingTeam) {
-                        res.status(statusCodes.BAD_REQUEST).send({msg: `Team with name: ${req.body.name} already exists`});
+                        res.status(statusCodes.BAD_REQUEST).send({ msg: `Team with name: ${req.body.name} already exists` });
                         return;
                     }
                 } catch (error) {
@@ -105,7 +108,7 @@ const teamController = {
     },
 
     delete: async (req: Request, res: Response) => {
-        res.status(200).send({msg: "Not implemented"});
+        res.status(200).send({ msg: "Not implemented" });
     }
 };
 

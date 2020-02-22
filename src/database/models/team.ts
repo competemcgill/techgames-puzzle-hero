@@ -15,7 +15,11 @@ const teamSchema: Schema = new Schema({
     puzzles: [{
         puzzleId: Schema.Types.ObjectId,
         completed: Boolean
-    }]
+    }],
+    score: {
+        type: Number,
+    }
+
 });
 
 const Team: Model<ITeamModel> = model<ITeamModel>("Team", teamSchema);
