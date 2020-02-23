@@ -30,6 +30,7 @@ const userController = {
                         res.status(statusCodes.SUCCESS).send({
                             success: true,
                             email: req.body.email,
+                            userId: foundUser._id,
                             message: "Success, logged in"
                         })
                     else
