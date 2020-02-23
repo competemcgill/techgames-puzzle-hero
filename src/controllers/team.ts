@@ -25,7 +25,12 @@ const teamController = {
         } else {
             try {
                 const foundTeam: ITeamModel = await teamDBInteractions.find(req.params.teamId);
-                if (foundTeam) res.status(statusCodes.SUCCESS).send(foundTeam);
+                if (foundTeam)
+                    res.status(statusCodes.SUCCESS).send(foundTeam);
+                else res.status(statusCodes.NOT_FOUND).send({
+                    success: false,
+                    message: "Team not found"
+                })
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).send(error);
             }
@@ -39,7 +44,10 @@ const teamController = {
         } else {
             try {
                 const foundTeam: ITeamModel = await teamDBInteractions.find(req.params.teamId);
-                if (foundTeam) res.status(statusCodes.BAD_REQUEST).send({ msg: "Team already exists" });
+                if (foundTeam) {
+                    res.status(statusCodes.BAD_REQUEST).send({ msg: "Team already exists" });
+                    return
+                }
                 const teamData: ITeam = {
                     ...req.body,
                     name: req.body.name,

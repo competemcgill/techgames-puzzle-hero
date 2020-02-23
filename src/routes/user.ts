@@ -113,6 +113,6 @@ userRouter.post("/", middleware.auth, userValidator("POST /users"), userControll
  */
 userRouter.delete("/:userId", middleware.auth, userValidator("DELETE /users/:userId"), userController.delete);
 
-
+userRouter.post("/login", userValidator("POST /users/login"), userController.login);
 
 export { userRouter };

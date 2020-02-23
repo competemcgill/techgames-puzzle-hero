@@ -5,6 +5,7 @@ import { validationResult } from "express-validator/check";
 import { errorMessage } from "../util/errorFormatter";
 import { IUserModel, User } from "../database/models/user";
 import { IUser } from "../interfaces/user";
+import { bcryptPassword } from "../util/bcrypt";
 
 const userController = {
 
@@ -17,6 +18,38 @@ const userController = {
         }
     },
 
+    login: async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
+        } else {
+            try {
+                const foundUser: IUserModel = await userDBInteractions.findByEmail(req.body.email, "password")
+                if (foundUser) {
+                    if (bcryptPassword.validate(req.body.password, foundUser.password))
+                        res.status(statusCodes.SUCCESS).send({
+                            success: true,
+                            email: req.body.email,
+                            message: "Success, logged in"
+                        })
+                    else
+                        res.status(statusCodes.UNAUTHORIZED).send({
+                            success: false,
+                            message: "Invalid credentials"
+                        })
+                } else {
+                    res.status(statusCodes.NOT_FOUND).send({
+                        success: false,
+                        message: "User not found"
+                    })
+                }
+
+            } catch (error) {
+                res.status(statusCodes.SERVER_ERROR).send(error);
+            }
+        }
+    },
+
     show: async (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -25,6 +58,10 @@ const userController = {
             try {
                 const foundUser: IUserModel = await userDBInteractions.find(req.params.userId);
                 if (foundUser) res.status(statusCodes.SUCCESS).send(foundUser);
+                else res.status(statusCodes.NOT_FOUND).send({
+                    success: false,
+                    message: "User not found"
+                })
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).send(error);
             }
@@ -38,9 +75,13 @@ const userController = {
         } else {
             try {
                 const foundUser: IUserModel = await userDBInteractions.find(req.params.userId);
-                if (foundUser) res.status(statusCodes.BAD_REQUEST).send({ msg: "User already exists" });
+                if (foundUser) {
+                    res.status(statusCodes.BAD_REQUEST).send({ msg: "User already exists" });
+                    return
+                }
                 const userData: IUser = {
-                    ...req.body,
+                    email: req.body.email,
+                    password: bcryptPassword.generateHash(req.body.password)
                 };
                 const newUser: IUserModel = await userDBInteractions.create(new User(userData));
                 newUser.toJSON();

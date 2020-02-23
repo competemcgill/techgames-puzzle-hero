@@ -16,6 +16,12 @@ export function userValidator(method: string): ValidationChain[] {
                 body("password", "Invalid or missing 'password'").exists().isString(),
             ];
         }
+        case "POST /users/login": {
+            return [
+                body("email", "Invalid or missing 'email'").exists().isEmail(),
+                body("password", "Invalid or missing 'password'").exists().isString(),
+            ];
+        }
         case "DELETE /users/:userId": {
             return [
                 param("userId", "Invalid or missing ':userId'").exists().isMongoId()
