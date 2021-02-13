@@ -7,6 +7,7 @@ services:
       - .:/app
     environment:
       - NODE_ENV=dev
+      - SECRET=test-secret
     working_dir: /app
     command: npm run start:local
     ports:

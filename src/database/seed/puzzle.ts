@@ -25,7 +25,4 @@ export const samplePuzzles: IPuzzle[] = [
         answer: "1",
         next: ["Puzzle 2"],
     },
-
-
-
 ]

@@ -6,6 +6,7 @@ import { errorMessage } from "../util/errorFormatter";
 import { IUserModel, User } from "../database/models/user";
 import { IUser } from "../interfaces/user";
 import { bcryptPassword } from "../util/bcrypt";
+import * as jwt from 'jsonwebtoken';
 
 const userController = {
 
@@ -26,12 +27,21 @@ const userController = {
             try {
                 const foundUser: IUserModel = await userDBInteractions.findByEmail(req.body.email, "password")
                 if (foundUser) {
-                    if (bcryptPassword.validate(req.body.password, foundUser.password))
+                    if (bcryptPassword.validate(req.body.password, foundUser.password)) {
+                        const token = jwt.sign(
+                            {
+                                id: foundUser._id,
+                                email: foundUser.email
+                            },
+                            process.env.SECRET
+                        );
                         res.status(statusCodes.SUCCESS).send({
                             success: true,
                             email: req.body.email,
+                            token: token,
                             message: "Success, logged in"
                         })
+                    }
                     else
                         res.status(statusCodes.UNAUTHORIZED).send({
                             success: false,
@@ -45,6 +55,7 @@ const userController = {
                 }
 
             } catch (error) {
+                console.log(error)
                 res.status(statusCodes.SERVER_ERROR).send(error);
             }
         }

@@ -1,12 +1,19 @@
 import { Request, Response, NextFunction } from "express";
 import { statusCodes } from "./statusCodes";
+import * as jwt from 'jsonwebtoken';
 
 export const middleware = {
     auth: (req: Request, res: Response, next: NextFunction) => {
-        const secret = req.headers["x-secret"];
 
-        if (secret == process.env.SECRET) next();
-        else {
+        const token: any = req.headers["x-auth"];
+        console.log(token)
+        console.log(typeof token)
+
+        try {
+            const payload = jwt.verify(token, process.env.SECRET);
+            next();
+        } catch (e) {
+            console.log(e)
             res.status(statusCodes.UNAUTHORIZED).send({ status: 401, message: "Unauthorized" });
         }
     }
