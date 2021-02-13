@@ -85,7 +85,7 @@ userRouter.get("/:userId", userValidator("GET /users/:userId"), userController.s
  *          500:
  *              description: Internal server error
  */
-userRouter.post("/", middleware.auth, userValidator("POST /users"), userController.create);
+userRouter.post("/", userValidator("POST /users"), userController.create);
 
 /**
  * @swagger
