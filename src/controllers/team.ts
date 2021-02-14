@@ -122,11 +122,11 @@ const teamController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
-                const user = await userDBInteractions.find(req.body.userId);
+                const user = await userDBInteractions.findByEmail(req.body.email);
                 if (user) {
                     const team = await teamDBInteractions.find(req.params.teamId);
                     if (team) {
-                        team.users.push(user._id)
+                        team.users.push(user.email)
                         await teamDBInteractions.update(req.params.teamId, team);
                         user.teamId = team._id;
                         await user.save();

@@ -9,8 +9,7 @@ const teamSchema: Schema = new Schema({
         unique: true
     },
     users: [{
-        type: Schema.Types.ObjectId,
-        ref: "User"
+        type: String
     }],
     puzzles: [{
         puzzleId: Schema.Types.ObjectId,
