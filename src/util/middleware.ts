@@ -4,10 +4,7 @@ import * as jwt from 'jsonwebtoken';
 
 export const middleware = {
     auth: (req: Request, res: Response, next: NextFunction) => {
-
         const token: any = req.headers["x-auth"];
-        console.log(token)
-        console.log(typeof token)
 
         try {
             const payload = jwt.verify(token, process.env.SECRET);

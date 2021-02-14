@@ -38,6 +38,7 @@ const userController = {
                         res.status(statusCodes.SUCCESS).send({
                             success: true,
                             email: req.body.email,
+                            teamId: foundUser.teamId,
                             token: token,
                             message: "Success, logged in"
                         })
@@ -92,7 +93,8 @@ const userController = {
                 }
                 const userData: IUser = {
                     email: req.body.email,
-                    password: bcryptPassword.generateHash(req.body.password)
+                    password: bcryptPassword.generateHash(req.body.password),
+                    teamId: null
                 };
                 const newUser: IUserModel = await userDBInteractions.create(new User(userData));
                 newUser.toJSON();

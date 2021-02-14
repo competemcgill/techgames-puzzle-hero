@@ -43,7 +43,7 @@ const teamController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
-                const foundTeam: ITeamModel = await teamDBInteractions.find(req.params.teamId);
+                const foundTeam: ITeamModel = await teamDBInteractions.findByName(req.body.name);
                 if (foundTeam) {
                     res.status(statusCodes.BAD_REQUEST).send({ msg: "Team already exists" });
                     return
@@ -128,6 +128,8 @@ const teamController = {
                     if (team) {
                         team.users.push(user._id)
                         await teamDBInteractions.update(req.params.teamId, team);
+                        user.teamId = team._id;
+                        await user.save();
                         res.status(statusCodes.SUCCESS).send(team);
                     } else {
                         res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Team not found" });
