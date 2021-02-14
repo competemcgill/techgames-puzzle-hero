@@ -25,7 +25,7 @@ const userController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
-                const foundUser: IUserModel = await userDBInteractions.findByEmail(req.body.email, "password")
+                const foundUser: IUserModel = await userDBInteractions.findByEmail(req.body.email, "+password")
                 if (foundUser) {
                     if (bcryptPassword.validate(req.body.password, foundUser.password)) {
                         const token = jwt.sign(
@@ -35,6 +35,7 @@ const userController = {
                             },
                             process.env.SECRET
                         );
+
                         res.status(statusCodes.SUCCESS).send({
                             success: true,
                             email: req.body.email,
