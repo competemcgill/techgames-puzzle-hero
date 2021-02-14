@@ -4,8 +4,9 @@ import { teamDBInteractions } from "../database/interactions/team";
 import { validationResult } from "express-validator/check";
 import { errorMessage } from "../util/errorFormatter";
 import { ITeamModel, Team } from "../database/models/team";
-import { ITeam } from "../interfaces/team";
+import { ITeam, ITeamPuzzle } from "../interfaces/team";
 import { userDBInteractions } from "../database/interactions/user";
+import { puzzleDBInteractions } from "../database/interactions/puzzle";
 
 const teamController = {
 
@@ -52,63 +53,25 @@ const teamController = {
                     ...req.body,
                     name: req.body.name,
                     users: [],
-                    score: 0
+                    score: 0,
+                    puzzles: []
                 };
+                const puzzles = await puzzleDBInteractions.all();
+                for (const puzzle of puzzles) {
+                    const newPuzzle: ITeamPuzzle = {
+                        completed: "LOCKED",
+                        title: puzzle.title,
+                        puzzleId: puzzle._id
+                    }
+                    if (puzzle.title == "0") {
+                        newPuzzle.completed = "UNLOCKED"
+                    }
+                    teamData.puzzles.push(newPuzzle)
+                }
                 const newTeam: ITeamModel = await teamDBInteractions.create(new Team(teamData));
                 newTeam.toJSON();
                 res.status(statusCodes.SUCCESS).send(newTeam);
 
-            } catch (error) {
-                res.status(statusCodes.SERVER_ERROR).send(error);
-            }
-        }
-    },
-
-    update: async (req: Request, res: Response) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
-        } else {
-            let foundTeam: ITeamModel;
-            try {
-                foundTeam = await teamDBInteractions.find(req.params.teamId);
-            } catch (error) {
-                res.status(statusCodes.SERVER_ERROR).send(error);
-                return;
-            }
-            if (req.body.users) {
-                for (const u of req.body.users) {
-                    try {
-                        const foundUser = await userDBInteractions.find(u);
-                        if (!foundUser) {
-                            res.status(statusCodes.NOT_FOUND).send({ msg: `User with id: ${u} not found` });
-                            return;
-                        }
-                    } catch (error) {
-                        res.status(statusCodes.SERVER_ERROR).send(error);
-                        return;
-                    }
-                }
-            }
-            if (req.body.name) {
-                try {
-                    const existingTeam = await teamDBInteractions.findByName(req.body.name);
-                    if (!existingTeam) {
-                        res.status(statusCodes.BAD_REQUEST).send({ msg: `Team with name: ${req.body.name} already exists` });
-                        return;
-                    }
-                } catch (error) {
-                    res.status(statusCodes.SERVER_ERROR).send(error);
-                }
-            }
-            const teamData: ITeam = {
-                ...req.body,
-                name: (req.body.name ? req.body.name : foundTeam.name),
-                users: (req.body.users ? req.body.users : foundTeam.users)
-            };
-            try {
-                const updatedTeam = await teamDBInteractions.update(req.params.teamId, teamData);
-                res.status(statusCodes.SUCCESS).send(updatedTeam.toJSON());
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).send(error);
             }

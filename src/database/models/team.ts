@@ -13,7 +13,12 @@ const teamSchema: Schema = new Schema({
     }],
     puzzles: [{
         puzzleId: Schema.Types.ObjectId,
-        completed: Boolean
+        title: String,
+        completed: {
+            type: String,
+            enum: ['COMPLETED', 'UNLOCKED', 'LOCKED'],
+            default: 'LOCKED'
+        }
     }],
     score: {
         type: Number,

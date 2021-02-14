@@ -19,13 +19,12 @@ mongoose.set("useCreateIndex", true);
 
 async function postStart() {
     try {
-        // await seed();
+        await seed();
         // tslint:disable-next-line:no-console
         console.log("Seeding successful");
     } catch (error) {
         // tslint:disable-next-line:no-console
         console.log(`Failure with seeding: ${error}`);
-        throw error;
     }
 }
 

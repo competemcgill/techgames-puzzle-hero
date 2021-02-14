@@ -12,9 +12,9 @@ export const puzzleDBInteractions = {
         return Puzzle.findOne({ _id: puzzleId }).exec();
     },
     getAnswer: (puzzleId: string): Promise<IPuzzleModel> => {
-        return Puzzle.findOne({ _id: puzzleId }).select('answer').exec();
+        return Puzzle.findOne({ _id: puzzleId }).select('+answer').exec();
     },
-    findByTitle: (title: string, ): Promise<IPuzzleModel> => {
+    findByTitle: (title: string,): Promise<IPuzzleModel> => {
         return Puzzle.findOne({ title: title }).exec();
     },
     update: (puzzleId: string, newPuzzle: IPuzzle): Promise<IPuzzleModel> => {

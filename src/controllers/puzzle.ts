@@ -60,34 +60,41 @@ const puzzleController = {
             try {
                 const foundPuzzle: IPuzzleModel = await puzzleDBInteractions.getAnswer(req.params.puzzleId);
                 if (!foundPuzzle) {
-                    res.status(statusCodes.MISSING_PARAMS).json({
+                    res.status(statusCodes.NOT_FOUND).json({
                         success: false,
                         message: "Puzzle not found"
                     })
                     return
                 }
-                // TODO: update team score if correct
                 let team: ITeam = await teamDBInteractions.find(req.body.teamId)
                 if (!team) {
-                    res.status(statusCodes.MISSING_PARAMS).json({
+                    res.status(statusCodes.NOT_FOUND).json({
                         success: false,
                         message: "Team not found"
                     })
                     return
                 }
-                let index = await team.puzzles.findIndex(obj => obj.puzzleId == req.params.puzzleId)
+
+                let index = team.puzzles.findIndex(obj => obj.puzzleId == req.params.puzzleId)
+                if (team.puzzles[index].completed == "COMPLETED") {
+                    res.status(statusCodes.SUCCESS).json({
+                        success: true,
+                        message: "Puzzle already answered correctly"
+                    })
+                    return
+                }
+
                 if (foundPuzzle.answer.toLowerCase() == req.body.answer.toLowerCase()) {
-                    if (index != -1 && !team.puzzles[index].completed) {
-                        team.puzzles[index].completed = true
+                    if (index != -1) {
+                        team.puzzles[index].completed = "COMPLETED"
                         team.score += 1
+                        for (const nextPuzzleTitle of foundPuzzle.next) {
+                            let nextIndex = team.puzzles.findIndex(obj => obj.title == nextPuzzleTitle);
+                            team.puzzles[nextIndex].completed = "UNLOCKED";
+                        }
                         const newTeam: ITeamModel = await teamDBInteractions.update(req.body.teamId, team)
                     } else if (index == -1) {
-                        team.puzzles.push({
-                            puzzleId: req.params.puzzleId,
-                            completed: true
-                        })
-                        team.score += 1
-                        const newTeam: ITeamModel = await teamDBInteractions.update(req.body.teamId, team)
+                        return res.status(statusCodes.SERVER_ERROR).json({ error: "Puzzle not found in team object" });
                     }
                     res.status(statusCodes.SUCCESS).json({
                         success: true,

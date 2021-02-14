@@ -87,50 +87,6 @@ teamRouter.post("/", middleware.auth, teamValidator("POST /teams"), teamControll
 teamRouter.post("/:teamId/addUser", middleware.auth, teamValidator("POST /teams/:teamId/addUser"), teamController.addUser);
 
 
-
-/**
- * @swagger
- * /teams/{teamId}:
- *  put:
- *      description: Updates a specific Team
- *      tags:
- *          - Teams
- *      parameters:
- *          - in: path
- *            name: teamId
- *            description: ID of the Team to update
- *            schema:
- *                type: string
- *                required: true
- *          - in: body
- *            name: userData
- *            description: team name can be updated
- *            schema:
- *                type: object
- *                properties:
- *                    name:
- *                        type: string
- *                    users:
- *                        type: array
- *                        items:
- *                            type: string
- *                example:
- *                    name: "McGill Martlets"
- *                    users: "[1,2,3]"
- *      produces:
- *          -application/json
- *      responses:
- *          200:
- *              description: Returns updated Team
- *          404:
- *              description: Team or User not found
- *          422:
- *              description: Validation error
- *          500:
- *              description: Internal server error
- */
-teamRouter.put("/:teamId", middleware.auth, teamValidator("PUT /teams/:teamId"), teamController.update);
-
 /**
  * @swagger
  * /teams/{teamId}:
