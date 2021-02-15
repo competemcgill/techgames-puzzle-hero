@@ -15,10 +15,13 @@ const puzzleSchema: Schema = new Schema({
         type: String,
         select: false
     },
+    category: {
+        type: String,
+        enum: ['Memes', 'McGill', 'Video Games', 'CS History', 'Algo Runtimes', 'Pop Culture', 'Competitive Programming', 'Uncategorized'],
+        default: 'Uncategorized'
+    },
     next: [{
         type: String,
-        // type: Schema.Types.ObjectId,
-        // ref: "Puzzle"
     }]
 });
 

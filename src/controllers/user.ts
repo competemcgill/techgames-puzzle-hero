@@ -15,6 +15,7 @@ const userController = {
             const users = await userDBInteractions.all();
             res.status(statusCodes.SUCCESS).send(users);
         } catch (error) {
+            console.log(error)
             res.status(statusCodes.SERVER_ERROR).send(error);
         }
     },
@@ -76,6 +77,7 @@ const userController = {
                     message: "User not found"
                 })
             } catch (error) {
+                console.log(error)
                 res.status(statusCodes.SERVER_ERROR).send(error);
             }
         }
@@ -87,7 +89,7 @@ const userController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
-                const foundUser: IUserModel = await userDBInteractions.find(req.params.userId);
+                const foundUser: IUserModel = await userDBInteractions.findByEmail(req.body.email);
                 if (foundUser) {
                     res.status(statusCodes.BAD_REQUEST).send({ msg: "User already exists" });
                     return
@@ -102,6 +104,7 @@ const userController = {
                 res.status(statusCodes.SUCCESS).send(newUser);
 
             } catch (error) {
+                console.log(error)
                 res.status(statusCodes.SERVER_ERROR).send(error);
             }
         }
@@ -121,6 +124,7 @@ const userController = {
                     res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "User not found" });
                 }
             } catch (error) {
+                console.log(error)
                 res.status(statusCodes.SERVER_ERROR).send(error);
             }
         }
