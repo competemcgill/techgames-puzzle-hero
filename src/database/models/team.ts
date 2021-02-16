@@ -22,8 +22,10 @@ const teamSchema: Schema = new Schema({
     }],
     score: {
         type: Number,
+    },
+    otherScore: {
+        type: Number
     }
-
 });
 
 const Team: Model<ITeamModel> = model<ITeamModel>("Team", teamSchema);

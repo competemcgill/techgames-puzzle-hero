@@ -13,4 +13,5 @@ export interface ITeam {
     users: string[];
     puzzles: ITeamPuzzle[];
     score: number;
+    otherScore: number;
 }

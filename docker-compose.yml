@@ -8,6 +8,7 @@ services:
     environment:
       - NODE_ENV=dev
       - SECRET=test-secret
+      - HARD_CODED_SECRET=tomato123
     working_dir: /app
     command: npm run start:local
     ports:

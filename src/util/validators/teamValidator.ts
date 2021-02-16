@@ -21,6 +21,18 @@ export function teamValidator(method: string): ValidationChain[] {
                 body("email", "Invalid or missing 'email'").exists().isString(),
             ];
         }
+        case "POST /teams/:teamName/addToOtherScore": {
+            return [
+                param("teamName", "Invalid or missing ':teamName'").exists(),
+                body("scoreToAdd", "Invalid or missing ':scoreToAdd").exists().isNumeric()
+            ]
+        }
+        case "POST /teams/:teamName/setOtherScore": {
+            return [
+                param("teamName", "Invalid or missing ':teamName'").exists(),
+                body("scoreToSet", "Invalid or missing ':scoreToSet").exists().isNumeric()
+            ]
+        }
         case "PUT /teams/:teamId": {
             return [
                 param("teamId", "Invalid or missing ':teamId'").exists().isMongoId(),

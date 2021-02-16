@@ -13,5 +13,16 @@ export const middleware = {
             console.log(e)
             res.status(statusCodes.UNAUTHORIZED).send({ status: 401, message: "Unauthorized" });
         }
+    },
+
+    secretAuth: (req: Request, res: Response, next: NextFunction) => {
+        const secret: any = req.headers["x-secret"];
+
+        if (secret === process.env.HARD_CODED_SECRET) {
+            next()
+        } else {
+            console.log(`${secret} is not the valid hard-coded secret`)
+            res.status(statusCodes.UNAUTHORIZED).send({ status: 401, message: "Unauthorized" });
+        }
     }
 }

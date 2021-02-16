@@ -54,6 +54,7 @@ const teamController = {
                     name: req.body.name,
                     users: [],
                     score: 0,
+                    otherScore: 0,
                     puzzles: []
                 };
                 const puzzles = await puzzleDBInteractions.all();
@@ -72,6 +73,52 @@ const teamController = {
                 newTeam.toJSON();
                 res.status(statusCodes.SUCCESS).send(newTeam);
 
+            } catch (error) {
+                res.status(statusCodes.SERVER_ERROR).send(error);
+            }
+        }
+    },
+
+    addToOtherScore: async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
+        } else {
+            try {
+                const team = await teamDBInteractions.findByName(req.params.teamName);
+                if (team) {
+                    team.otherScore += Number(req.body.scoreToAdd)
+                    await team.save();
+                    res.status(statusCodes.SUCCESS).send({
+                        newScore: team.otherScore
+                    });
+                } else {
+                    res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Team not found" });
+                    return
+                }
+            } catch (error) {
+                res.status(statusCodes.SERVER_ERROR).send(error);
+            }
+        }
+    },
+
+    setOtherScore: async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
+        } else {
+            try {
+                const team = await teamDBInteractions.findByName(req.params.teamName);
+                if (team) {
+                    team.otherScore = req.body.scoreToSet
+                    await team.save();
+                    res.status(statusCodes.SUCCESS).send({
+                        newScore: team.otherScore
+                    });
+                } else {
+                    res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Team not found" });
+                    return
+                }
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).send(error);
             }

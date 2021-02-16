@@ -87,6 +87,10 @@ teamRouter.post("/", middleware.auth, teamValidator("POST /teams"), teamControll
 teamRouter.post("/:teamId/addUser", middleware.auth, teamValidator("POST /teams/:teamId/addUser"), teamController.addUser);
 
 
+teamRouter.post("/:teamName/addToOtherScore", middleware.secretAuth, teamValidator("POST /teams/:teamName/addToOtherScore"), teamController.addToOtherScore);
+
+teamRouter.post("/:teamName/setOtherScore", middleware.secretAuth, teamValidator("POST /teams/:teamName/setOtherScore"), teamController.setOtherScore);
+
 /**
  * @swagger
  * /teams/{teamId}:
