@@ -39,6 +39,7 @@ const userController = {
 
                         res.status(statusCodes.SUCCESS).send({
                             success: true,
+                            user: foundUser,
                             email: req.body.email,
                             teamId: foundUser.teamId,
                             token: token,
